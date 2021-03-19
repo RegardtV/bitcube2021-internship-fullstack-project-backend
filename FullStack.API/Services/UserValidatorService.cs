@@ -52,17 +52,17 @@ namespace FullStack.API.Services
             var firstNameCleansed = Regex.Replace(firstName, @"\s+", "");
             if (firstNameCleansed.Length != firstName.Length)
             {
-                sb.Append("Your first name cannot contain whitespace. ");
+                sb.Append("First name cannot contain whitespace. ");
                 isValid = false;
             }
             if (firstName.Length < 3)
             {
-                sb.Append("Your first name must contain at least 1 character. ");
+                sb.Append("First name must contain at least 1 character. ");
                 isValid = false;
             }
             if (firstName.Length > 100)
             {
-                sb.Append("Your first name must contain less than 100 characters. ");
+                sb.Append("First name must contain less than 100 characters. ");
                 isValid = false;
             }
             if (!isValid)
@@ -81,17 +81,17 @@ namespace FullStack.API.Services
             var lastNameCleansed = Regex.Replace(lastName, @"\s+", "");
             if (lastNameCleansed.Length != lastName.Length)
             {
-                sb.Append("Your last name cannot contain whitespace. ");
+                sb.Append("Last name cannot contain whitespace. ");
                 isValid = false;
             }
             if (lastName.Length < 3)
             {
-                sb.Append("Your last name must contain at least 3 characters. ");
+                sb.Append("Last name must contain at least 3 characters. ");
                 isValid = false;
             }
             if (lastName.Length > 100)
             {
-                sb.Append("Your last name must contain less than 100 characters. ");
+                sb.Append("Last name must contain less than 100 characters. ");
                 isValid = false;
             }
             if (!isValid)
@@ -115,17 +115,17 @@ namespace FullStack.API.Services
             var emailCleansed = Regex.Replace(email, @"\s+", "");
             if (emailCleansed.Length != email.Length)
             {
-                sb.Append("Your email address cannot contain whitespace. ");
+                sb.Append("Email address cannot contain whitespace. ");
                 isValid = false;
             }
             if (email.Length < 6)
             {
-                sb.Append("Your email address must contain at least 6 characters. ");
+                sb.Append("Email address must contain at least 6 characters. ");
                 isValid = false;
             }
             if (email.Length > 100)
             {
-                sb.Append("Your email address must contain less than 100 characters. ");
+                sb.Append("Email address must contain less than 100 characters. ");
                 isValid = false;
             }
             if (!isValid)
@@ -150,7 +150,7 @@ namespace FullStack.API.Services
             var passwordCleansed = Regex.Replace(password, @"\s+", "");
             if (passwordCleansed.Length != password.Length)
             {
-                sb.Append("Your password cannot contain whitespace. ");
+                sb.Append("Password cannot contain whitespace. ");
                 isValid = false;
             }
             if (!hasUpperChar.IsMatch(password))

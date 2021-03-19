@@ -15,8 +15,8 @@ namespace FullStack.Data.Repositories
     }
     public class UserRepository: IUserRepository
     {
-        private readonly UserDbContext _ctx;
-        public UserRepository(UserDbContext ctx)
+        private readonly FullStackDbContext _ctx;
+        public UserRepository(FullStackDbContext ctx)
         {
             _ctx = ctx;
         }

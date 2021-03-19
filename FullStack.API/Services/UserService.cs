@@ -71,7 +71,10 @@ namespace FullStack.API.Services
         public UserViewModel GetById(int id)
         {
             var entity = _repo.GetUser(id);
-            if (entity == null) return null;
+            if (entity == null)
+            {
+                throw new NotFoundApiException("User does not exist");
+            }
 
             return _mapper.ViewMapper(entity);
         }

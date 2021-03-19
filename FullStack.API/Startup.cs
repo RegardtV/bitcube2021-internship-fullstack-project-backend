@@ -42,17 +42,22 @@ namespace FullStack.API
 
             // add the DbContext and repository
 
-            services.AddDbContext<UserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserDbConnection")));
+            services.AddDbContext<FullStackDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("FullStackDbConnection")));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAdvertRepository, AdvertRepository>();
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserValidator, UserValidator>();
             services.AddScoped<IUserMapper, UserMapper>();
+
+            services.AddScoped<IAdvertService, AdvertService>();
+            services.AddScoped<IAdvertValidator, AdvertValidator>();
+            services.AddScoped<IAdvertMapper, AdvertMapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserDbContext userDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, FullStackDbContext userDbContext)
         {
             // migrate any database changes on startup (includes initial db creation)
             userDbContext.Database.Migrate();

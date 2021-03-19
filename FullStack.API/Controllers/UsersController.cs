@@ -26,7 +26,7 @@ namespace FullStack.API.Controllers
         {
 
             var user = _userService.Create(model);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user); ;
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         [HttpPost("authenticate")]
