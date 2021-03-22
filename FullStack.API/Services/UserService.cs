@@ -13,6 +13,7 @@ using FullStack.Data.Entities;
 using FullStack.API.Exceptions;
 using FullStack.Data.Repositories;
 using FullStack.API.Helpers.Exceptions;
+using FullStack.ViewModels.Adverts;
 
 namespace FullStack.API.Services
 {
@@ -22,27 +23,41 @@ namespace FullStack.API.Services
         IEnumerable<UserViewModel> GetAll();
         UserViewModel GetById(int id);
         UserViewModel Create(UserRegisterModel model);
+
+        IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId);
+        AdvertViewModel GetUserAdvertById(int userId, int advertId);
+        AdvertViewModel CreateUserAdvertById(int userId, AdvertCreateUpdateModel model);
+        void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model);
     }
 
     public class UserService : IUserService
     {
         private readonly IUserRepository _repo;
-        private readonly IUserValidator _validator;
-        private readonly IUserMapper _mapper;
+        private readonly IUserValidator _userValidator;
+        public readonly IAdvertValidator _advertValidator;
+        public readonly IUserMapper _userMapper;
+        public readonly IAdvertMapper _advertMapper;
         private readonly AppSettings _appSettings;
 
-        public UserService(IUserRepository repo, IUserValidator validator, IUserMapper mapper, IOptions<AppSettings> appSettings)
+        public UserService( IUserRepository repo,
+                            IUserValidator userValidator,
+                            IAdvertValidator advertValidator,
+                            IUserMapper userMapper,
+                            IAdvertMapper advertMapper,
+                            IOptions<AppSettings> appSettings)
         {
             _repo = repo;
-            _validator = validator;
-            _mapper = mapper;
+            _userValidator = userValidator;
+            _advertValidator = advertValidator;
+            _userMapper = userMapper;
+            _advertMapper = advertMapper;
             _appSettings = appSettings.Value;
         }
 
         public UserAuthenticateResponseModel Authenticate(UserAuthenticateRequestModel model)
         {
             // validation
-            var results = _validator.Validate(model).ToArray();
+            var results = _userValidator.Validate(model).ToArray();
             if (results.Length > 0)
                 throw new ValidationApiException(results);
 
@@ -59,13 +74,13 @@ namespace FullStack.API.Services
             var token = GenerateJwtToken(entity.Id);
 
             //return the UserAuthenticateResponseModel to the controller
-            return _mapper.AuthenticateMapper(entity, token);
+            return _userMapper.AuthenticateMapper(entity, token);
         }
 
         public IEnumerable<UserViewModel> GetAll()
         {
             var entityList = _repo.GetUsers();
-            return entityList.Select(user => _mapper.ViewMapper(user));
+            return entityList.Select(user => _userMapper.ViewMapper(user));
         }
 
         public UserViewModel GetById(int id)
@@ -76,13 +91,13 @@ namespace FullStack.API.Services
                 throw new NotFoundApiException("User does not exist");
             }
 
-            return _mapper.ViewMapper(entity);
+            return _userMapper.ViewMapper(entity);
         }
 
         public UserViewModel Create(UserRegisterModel model)
         {
             // validation
-            var results = _validator.Validate(model).ToArray();
+            var results = _userValidator.Validate(model).ToArray();
             if (results.Length > 0)
                 throw new ValidationApiException(results);
 
@@ -91,10 +106,65 @@ namespace FullStack.API.Services
                 throw new DuplicateUserApiException("Email address already in use");
             }
 
-            User entity = _mapper.EntityMapper(model);
+            User entity = _userMapper.EntityMapper(model);
             entity = _repo.CreateUser(entity);
-            return _mapper.ViewMapper(entity);
+            return _userMapper.ViewMapper(entity);
         }
+
+        public IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId)
+        {
+            var entityList = _repo.GetAllUserAdverts(userId);
+            return entityList.Select(advert => _advertMapper.ViewMapper(advert));
+        }
+
+        public AdvertViewModel GetUserAdvertById(int userId, int advertId)
+        {
+            if (_repo.GetUser(userId) == null)
+                throw new NotFoundApiException("User does not exist");
+
+            var entity = _repo.GetUserAdvertById(userId, advertId);
+
+            if (entity == null)
+                throw new NotFoundApiException("Advert does not exist");
+
+            return _advertMapper.ViewMapper(entity);
+        }
+
+        public AdvertViewModel CreateUserAdvertById(int userId, AdvertCreateUpdateModel model)
+        {
+            // validation
+            var results = _advertValidator.Validate(model).ToArray();
+            if (results.Length > 0)
+                throw new ValidationApiException(results);
+
+            if (_repo.GetUser(userId) == null)
+                throw new NotFoundApiException("User does not exist");
+
+            var entity = _advertMapper.EntityMapper(model);
+            entity.UserId = userId;
+            entity = _repo.CreateUserAdvertById(entity);
+            return _advertMapper.ViewMapper(entity);
+        }
+
+        public void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model)
+        {
+            // validation
+            var results = _advertValidator.Validate(model).ToArray();
+            if (results.Length > 0)
+                throw new ValidationApiException(results);
+
+            if (_repo.GetUser(userId) == null)
+                throw new NotFoundApiException("User does not exist");
+
+            if (_repo.GetUserAdvertById(userId, advertId) == null)
+                throw new NotFoundApiException("Advert does not exist");
+
+            var entity = _advertMapper.EntityMapper(model);
+            entity.UserId = userId;
+            entity.Id = advertId;
+            _repo.UpdateUserAdvertById(entity);
+        }
+
 
         // generate token that is valid for 7 days
         private string GenerateJwtToken(int userId)

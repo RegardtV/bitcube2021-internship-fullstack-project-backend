@@ -19,10 +19,8 @@ namespace FullStack.API.Services
 {
     public interface IAdvertService
     {
-        IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId);
-        AdvertViewModel GetUserAdvertById(int userId, int advertId);
-        AdvertViewModel CreateUserAdvertById(int userId, AdvertCreateUpdateModel model);
-        void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model);
+        IEnumerable<AdvertViewModel> GetAllAdverts();
+        AdvertViewModel GetAdvertById(int advertId);
         IEnumerable<ProvinceViewModel> GetAllProvinces();
         IEnumerable<CityViewModel> GetAllCities();
         IEnumerable<CityViewModel> GetAllProvinceCities(int provinceId);
@@ -30,84 +28,48 @@ namespace FullStack.API.Services
 
     public class AdvertService : IAdvertService
     {
-        private readonly IUserRepository _userRepo;
-        private readonly IAdvertRepository _advertRepo;
+        private readonly IAdvertRepository _repo;
         private readonly IAdvertValidator _validator;
         private readonly IAdvertMapper _mapper;
 
-        public AdvertService(IAdvertRepository advertRepo, IUserRepository userRepo, IAdvertValidator validator, IAdvertMapper mapper)
+        public AdvertService(IAdvertRepository repo, IAdvertValidator validator, IAdvertMapper mapper)
         {
-            _advertRepo = advertRepo;
-            _userRepo = userRepo;
+            _repo = repo;
             _validator = validator;
             _mapper = mapper;
         }
 
-        public IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId)
+        public IEnumerable<AdvertViewModel> GetAllAdverts()
         {
-            var entityList = _advertRepo.GetAllUserAdverts(userId);
+            var entityList = _repo.GetAllAdverts();
             return entityList.Select(advert => _mapper.ViewMapper(advert));
         }
 
-        public AdvertViewModel GetUserAdvertById(int userId, int advertId)
+        public AdvertViewModel GetAdvertById(int advertId)
         {
-            if (_userRepo.GetUser(userId) == null)
-                throw new NotFoundApiException("User does not exist");
-
-            var entity = _advertRepo.GetUserAdvertById(userId, advertId);
-            return _mapper.ViewMapper(entity);
-        }
-
-        public AdvertViewModel CreateUserAdvertById(int userId, AdvertCreateUpdateModel model)
-        {
-            // validation
-            var results = _validator.Validate(model).ToArray();
-            if (results.Length > 0)
-                throw new ValidationApiException(results);
-
-            if (_userRepo.GetUser(userId) == null)
-                throw new NotFoundApiException("User does not exist");
-
-            var entity = _mapper.EntityMapper(model);
-            entity.UserId = userId;
-            entity = _advertRepo.CreateUserAdvertById(entity);
-            return _mapper.ViewMapper(entity);
-        }
-
-        public void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model)
-        {
-            // validation
-            var results = _validator.Validate(model).ToArray();
-            if (results.Length > 0)
-                throw new ValidationApiException(results);
-
-            if (_userRepo.GetUser(userId) == null)
-                throw new NotFoundApiException("User does not exist");
+            var entity = _repo.GetAdvertById(advertId);
             
-            if (_advertRepo.GetUserAdvertById(userId, advertId) == null)
+            if (entity == null)
                 throw new NotFoundApiException("Advert does not exist");
 
-            var entity = _mapper.EntityMapper(model);
-            entity.UserId = userId;
-            entity.Id = advertId;
-            _advertRepo.UpdateUserAdvertById(entity);
+            return _mapper.ViewMapper(entity);
         }
 
         public IEnumerable<ProvinceViewModel> GetAllProvinces()
         {
-            var entityList = _advertRepo.GetAllProvinces();
+            var entityList = _repo.GetAllProvinces();
             return entityList.Select(province => _mapper.ProvinceMapper(province));
         }
 
         public IEnumerable<CityViewModel> GetAllCities()
         {
-            var entityList = _advertRepo.GetAllCities();
+            var entityList = _repo.GetAllCities();
             return entityList.Select(city => _mapper.CityMapper(city));
         }
 
         public IEnumerable<CityViewModel> GetAllProvinceCities(int provinceId)
         {
-            var entityList = _advertRepo.GetAllProvinceCities(provinceId);
+            var entityList = _repo.GetAllProvinceCities(provinceId);
             return entityList.Select(city => _mapper.CityMapper(city));
         }
     }

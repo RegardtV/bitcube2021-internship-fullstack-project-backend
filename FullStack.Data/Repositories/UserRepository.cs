@@ -12,6 +12,10 @@ namespace FullStack.Data.Repositories
         List<User> GetUsers();
         User GetUser(int id);
         User CreateUser(User user);
+        List<Advert> GetAllUserAdverts(int userId);
+        Advert GetUserAdvertById(int userId, int advertId);
+        Advert CreateUserAdvertById(Advert advert);
+        void UpdateUserAdvertById(Advert advert);
     }
     public class UserRepository: IUserRepository
     {
@@ -37,6 +41,29 @@ namespace FullStack.Data.Repositories
             _ctx.SaveChanges();
 
             return user;
+        }
+        public List<Advert> GetAllUserAdverts(int userId)
+        {
+            return _ctx.Adverts.Where(ad => ad.UserId == userId).ToList();
+        }
+
+        public Advert GetUserAdvertById(int userId, int advertId)
+        {
+            return _ctx.Adverts
+                .Where(adv => adv.UserId == userId && adv.Id == advertId).FirstOrDefault();
+        }
+
+        public Advert CreateUserAdvertById(Advert advert)
+        {
+            _ctx.Adverts.Add(advert);
+            _ctx.SaveChanges();
+            return advert;
+        }
+
+        public void UpdateUserAdvertById(Advert advert)
+        {
+            _ctx.Adverts.Update(advert);
+            _ctx.SaveChanges();
         }
     }
 }

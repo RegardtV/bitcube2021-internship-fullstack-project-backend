@@ -50,10 +50,10 @@ namespace FullStack.Data.DbContexts
                 {
                     Id = 2,
                     Header = "Large family house that sleeps 6",
-                    Description = "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf",
+                    Description = "Has a big living room and nice view of the city...",
                     Province = "Free State",
                     City = "Bloemfontein",
-                    Price = 1450000M,
+                    Price = 2000000M,
                     Date = new DateTime(2021, 02, 25),
                     State = "Hidden",
                     UserId = 1
@@ -61,12 +61,12 @@ namespace FullStack.Data.DbContexts
                 new Advert()
                 {
                     Id = 3,
-                    Header = "Large family house that sleeps 6",
-                    Description = "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf",
+                    Header = "Mansion fit for a king",
+                    Description = "King Louis IV used to live here",
                     Province = "Gauteng",
                     City = "Johannesburg",
-                    Price = 1450000M,
-                    Date = new DateTime(2021, 02, 25),
+                    Price = 11450000M,
+                    Date = new DateTime(2021, 03, 03),
                     State = "Hidden",
                     UserId = 1
                 }

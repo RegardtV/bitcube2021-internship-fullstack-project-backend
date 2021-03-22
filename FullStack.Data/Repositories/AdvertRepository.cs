@@ -9,10 +9,8 @@ namespace FullStack.Data.Repositories
 {
     public interface IAdvertRepository
     {
-        List<Advert> GetAllUserAdverts(int userId);
-        Advert GetUserAdvertById(int userId, int advertId);
-        Advert CreateUserAdvertById(Advert advert);
-        void UpdateUserAdvertById(Advert advert);
+        List<Advert> GetAllAdverts();
+        Advert GetAdvertById(int advertId);
         List<Province> GetAllProvinces();
         List<City> GetAllCities();
         List<City> GetAllProvinceCities(int provinceId);
@@ -25,28 +23,14 @@ namespace FullStack.Data.Repositories
             _ctx = ctx;
         }
 
-        public List<Advert> GetAllUserAdverts(int userId)
+        public List<Advert> GetAllAdverts()
         {
-            return _ctx.Adverts.Where(ad => ad.UserId == userId).ToList();
+            return _ctx.Adverts.ToList();
         }
 
-        public Advert GetUserAdvertById(int userId, int advertId)
+        public Advert GetAdvertById(int advertId)
         {
-            return _ctx.Adverts
-                .Where(adv => adv.UserId == userId && adv.Id == advertId).FirstOrDefault();
-        }
-
-        public Advert CreateUserAdvertById( Advert advert)
-        {
-            _ctx.Adverts.Add(advert);
-            _ctx.SaveChanges();
-            return advert;
-        }
-
-        public void UpdateUserAdvertById(Advert advert)
-        {
-            _ctx.Adverts.Update(advert);
-            _ctx.SaveChanges();
+            return _ctx.Adverts.Find(advertId);
         }
 
         public List<Province> GetAllProvinces()

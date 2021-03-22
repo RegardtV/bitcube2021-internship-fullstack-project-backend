@@ -118,12 +118,12 @@ namespace FullStack.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Adverts",
                 columns: new[] { "Id", "City", "Date", "Description", "Header", "Price", "Province", "State", "UserId" },
-                values: new object[] { 2, "Bloemfontein", new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf", "Large family house that sleeps 6", 1450000m, "Free State", "Hidden", 1 });
+                values: new object[] { 2, "Bloemfontein", new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city...", "Large family house that sleeps 6", 2000000m, "Free State", "Hidden", 1 });
 
             migrationBuilder.InsertData(
                 table: "Adverts",
                 columns: new[] { "Id", "City", "Date", "Description", "Header", "Price", "Province", "State", "UserId" },
-                values: new object[] { 3, "Johannesburg", new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf", "Large family house that sleeps 6", 1450000m, "Gauteng", "Hidden", 1 });
+                values: new object[] { 3, "Johannesburg", new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "King Louis IV used to live here", "Mansion fit for a king", 11450000m, "Gauteng", "Hidden", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Adverts_UserId",

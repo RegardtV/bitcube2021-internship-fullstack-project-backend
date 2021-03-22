@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStack.Data.Migrations
 {
     [DbContext(typeof(FullStackDbContext))]
-    [Migration("20210318082300_init")]
+    [Migration("20210322050407_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,9 +76,9 @@ namespace FullStack.Data.Migrations
                             Id = 2,
                             City = "Bloemfontein",
                             Date = new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf",
+                            Description = "Has a big living room and nice view of the city...",
                             Header = "Large family house that sleeps 6",
-                            Price = 1450000m,
+                            Price = 2000000m,
                             Province = "Free State",
                             State = "Hidden",
                             UserId = 1
@@ -87,10 +87,10 @@ namespace FullStack.Data.Migrations
                         {
                             Id = 3,
                             City = "Johannesburg",
-                            Date = new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Has a big living room and nice view of the city dsfasdfasdfasdfasdfasdfasdfasdf dfasdfasdfasdfasdf adsfasdfasdfasdf",
-                            Header = "Large family house that sleeps 6",
-                            Price = 1450000m,
+                            Date = new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "King Louis IV used to live here",
+                            Header = "Mansion fit for a king",
+                            Price = 11450000m,
                             Province = "Gauteng",
                             State = "Hidden",
                             UserId = 1
