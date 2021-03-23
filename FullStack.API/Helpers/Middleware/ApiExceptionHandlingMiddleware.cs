@@ -41,7 +41,11 @@ namespace FullStack.API.Helpers
                 }
                 if (ex is NotFoundApiException)
                 {
-                    await HandleNotFopundExceptionAsync(context, ex as NotFoundApiException);
+                    await HandleNotFoundExceptionAsync(context, ex as NotFoundApiException);
+                }
+                if (ex is CheckPasswordApiException)
+                {
+                    await HandleCheckPasswordExceptionAsync(context, ex as CheckPasswordApiException);
                 }
             }
         }
@@ -65,10 +69,16 @@ namespace FullStack.API.Helpers
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             return context.Response.WriteAsync(exception.Message);
         }
-        private static Task HandleNotFopundExceptionAsync(HttpContext context, NotFoundApiException exception)
+        private static Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundApiException exception)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            return context.Response.WriteAsync(exception.Message);
+        }
+        private static Task HandleCheckPasswordExceptionAsync(HttpContext context, CheckPasswordApiException exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             return context.Response.WriteAsync(exception.Message);
         }
     }

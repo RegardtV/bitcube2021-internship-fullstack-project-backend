@@ -1,5 +1,6 @@
 ﻿using FullStack.Data.DbContexts;
 using FullStack.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,13 @@ namespace FullStack.Data.Repositories
 
         public List<Advert> GetAllAdverts()
         {
-            return _ctx.Adverts.ToList();
+            return _ctx.Adverts.Include(ad => ad.Province).Include(ad => ad.City).ToList();
         }
 
         public Advert GetAdvertById(int advertId)
         {
-            return _ctx.Adverts.Find(advertId);
+            return _ctx.Adverts.Include(ad => ad.Province).Include(ad => ad.City)
+                .Where(adv => adv.Id == advertId).FirstOrDefault();
         }
 
         public List<Province> GetAllProvinces()

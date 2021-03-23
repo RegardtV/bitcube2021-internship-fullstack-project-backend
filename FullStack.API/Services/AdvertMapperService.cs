@@ -25,8 +25,10 @@ namespace FullStack.API.Services
                 Id = entity.Id,
                 Header = entity.Header,
                 Description = entity.Description,
-                Province = entity.Province,
-                City = entity.City,
+                Province = entity.Province.Name,
+                ProvinceId = entity.ProvinceId,
+                City = entity.City.Name,
+                CityId = entity.CityId,
                 Price = entity.Price,
                 Date = entity.Date.ToString("dd-MM-yyyy"),
                 State = entity.State,
@@ -40,8 +42,8 @@ namespace FullStack.API.Services
             {
                 Header = model.Header,
                 Description = model.Description,
-                Province = model.Province,
-                City = model.City,
+                ProvinceId = model.ProvinceId,
+                CityId = model.CityId,
                 Price = model.Price,
                 Date = DateTime.ParseExact(model.Date, "dd-MM-yyyy", CultureInfo.InvariantCulture),
                 State = model.State

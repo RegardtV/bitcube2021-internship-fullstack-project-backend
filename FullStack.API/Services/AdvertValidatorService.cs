@@ -24,12 +24,6 @@ namespace FullStack.API.Services
             var descriptionResult = ValidateDescription(model.Description);
             if (descriptionResult != null) yield return descriptionResult;
 
-            var provinceResult = ValidateProvince(model.Province);
-            if (provinceResult != null) yield return provinceResult;
-
-            var cityResult = ValidateCity(model.City);
-            if (cityResult != null) yield return cityResult;
-
             var priceResult = ValidatePrice(model.Price);
             if (priceResult != null) yield return priceResult;
         }
@@ -64,21 +58,6 @@ namespace FullStack.API.Services
             return null;
         }
 
-        private ValidationResult ValidateProvince(string province)
-        {
-            if (province == null)
-                return new ValidationResult(nameof(province), "Province is required");
-            
-            return null;
-        }
-
-        private ValidationResult ValidateCity(string city)
-        {
-            if (city == null)
-                return new ValidationResult(nameof(city), "City is required");
-
-            return null;
-        }
         private ValidationResult ValidatePrice(decimal price)
         {
             if (price < 10000)

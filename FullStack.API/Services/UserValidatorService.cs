@@ -12,12 +12,18 @@ namespace FullStack.API.Services
 {
     public interface IUserValidator
     {
+        public IEnumerable<ValidationResult> Validate(string password);
         public IEnumerable<ValidationResult> Validate(UserAuthenticateRequestModel model);
-        public IEnumerable<ValidationResult> Validate(UserRegisterModel model);
+        public IEnumerable<ValidationResult> Validate(UserCreateUpdateModel model);
     }
 
     public class UserValidator : IUserValidator
     {
+        public IEnumerable<ValidationResult> Validate(string password)
+        {
+            var passwordResult = ValidatePassword(password);
+            if (passwordResult != null) yield return passwordResult;
+        }
         public IEnumerable<ValidationResult> Validate(UserAuthenticateRequestModel model)
         {
             var emailResult = ValidateEmail(model.Email);
@@ -27,7 +33,7 @@ namespace FullStack.API.Services
             if (passwordResult != null) yield return passwordResult;
         }
 
-        public IEnumerable<ValidationResult> Validate(UserRegisterModel model)
+        public IEnumerable<ValidationResult> Validate(UserCreateUpdateModel model)
         {
             var firstNameResult = ValidateFirstName(model.FirstName);
             if (firstNameResult != null) yield return firstNameResult;
@@ -37,6 +43,9 @@ namespace FullStack.API.Services
 
             var emailResult = ValidateEmail(model.Email);
             if (emailResult != null) yield return emailResult;
+
+            var phoneNumberResult = ValidatePhoneNumber(model.PhoneNumber);
+            if (phoneNumberResult != null) yield return phoneNumberResult;
 
             var passwordResult = ValidatePassword(model.Password);
             if (passwordResult != null) yield return passwordResult;
@@ -132,6 +141,20 @@ namespace FullStack.API.Services
                 return new ValidationResult(nameof(email), sb.ToString());
             else
                 return null;
+        }
+
+        private ValidationResult ValidatePhoneNumber(string phoneNumber)
+        {
+            if (phoneNumber != null && phoneNumber.Length < 6)
+            {
+                return new ValidationResult(nameof(phoneNumber),"Phone number must contain at least 6 characters. ");
+            }
+            if (phoneNumber != null && phoneNumber.Length > 30)
+            {
+                return new ValidationResult(nameof(phoneNumber), "Phone number must contain less than 30 characters. ");
+            };
+
+            return null;
         }
 
         private ValidationResult ValidatePassword(string password)

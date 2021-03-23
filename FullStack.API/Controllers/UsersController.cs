@@ -23,40 +23,49 @@ namespace FullStack.API.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<UserViewModel> Register(UserRegisterModel model)
+        public ActionResult<UserViewModel> RegisterUser(UserCreateUpdateModel model)
         {
 
-            var user = _userService.Create(model);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            var user = _userService.CreateUser(model);
+            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
         [HttpPost("authenticate")]
-        public ActionResult<UserAuthenticateResponseModel> Authenticate(UserAuthenticateRequestModel model)
+        public ActionResult<UserAuthenticateResponseModel> AuthenticateUser(UserAuthenticateRequestModel model)
         {
-            var response = _userService.Authenticate(model);
+            var response = _userService.AuthenticateUser(model);
             return Ok(response);
         }
 
         [Authorize]
-        [HttpGet]
-        public ActionResult<IEnumerable<UserViewModel>> GetAll()
+        [HttpPost("{userId}/password")]
+        public IActionResult CheckUserPassword(int userId, UserPasswordCheckModel model)
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            _userService.CheckUserPassword(userId, model);
+            return Ok();
         }
-        
-        /*[HttpGet("{unsecure}")]
-        public ActionResult<IEnumerable<UserViewModel>> GetAllUnsecure()
-        {
-            var users = _userService.GetAll();
-            return Ok(users);
-        }*/
 
         [Authorize]
-        [HttpGet("{id}", Name ="GetById")]
-        public ActionResult<UserViewModel> GetById(int id)
+        [HttpGet]
+        public ActionResult<IEnumerable<UserViewModel>> GetAllUsers()
         {
-            var user = _userService.GetById(id);
+            var users = _userService.GetAllUsers();
+            return Ok(users);
+        }
+
+        [Authorize]
+        [HttpGet("{id}", Name ="GetUserById")]
+        public ActionResult<UserViewModel> GetUserById(int id)
+        {
+            var user = _userService.GetUserById(id);
+            return Ok(user);
+        }
+
+        [Authorize]
+        [HttpPut("{userId}")]
+        public ActionResult<UserViewModel> UpdateUser(int userId, UserCreateUpdateModel model)
+        {
+            var user = _userService.UpdateUser(userId, model);
             return Ok(user);
         }
 

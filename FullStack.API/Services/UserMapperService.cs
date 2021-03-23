@@ -9,19 +9,20 @@ namespace FullStack.API.Services
 {
     public interface IUserMapper
     {
-        User EntityMapper(UserRegisterModel model);
+        User EntityMapper(UserCreateUpdateModel model);
         UserViewModel ViewMapper(User entity);
         UserAuthenticateResponseModel AuthenticateMapper(User entity, string token);
     }
     public class UserMapper: IUserMapper
     {
-        public User EntityMapper(UserRegisterModel model)
+        public User EntityMapper(UserCreateUpdateModel model)
         {
             return new User()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
                 Password = model.Password
             };
         }
@@ -33,7 +34,8 @@ namespace FullStack.API.Services
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Email = entity.Email
+                Email = entity.Email,
+                PhoneNumber = entity.PhoneNumber
             };
         }
 
@@ -45,6 +47,7 @@ namespace FullStack.API.Services
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Email = entity.Email,
+                PhoneNumber = entity.PhoneNumber,
                 Token = token
             };
         }

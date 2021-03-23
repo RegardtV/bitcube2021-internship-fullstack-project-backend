@@ -19,10 +19,12 @@ namespace FullStack.API.Services
 {
     public interface IUserService
     {
-        UserAuthenticateResponseModel Authenticate(UserAuthenticateRequestModel model);
-        IEnumerable<UserViewModel> GetAll();
-        UserViewModel GetById(int id);
-        UserViewModel Create(UserRegisterModel model);
+        UserAuthenticateResponseModel AuthenticateUser(UserAuthenticateRequestModel model);
+        void CheckUserPassword(int userId, UserPasswordCheckModel model);
+        IEnumerable<UserViewModel> GetAllUsers();
+        UserViewModel GetUserById(int id);
+        UserViewModel CreateUser(UserCreateUpdateModel model);
+        UserViewModel UpdateUser(int userId, UserCreateUpdateModel model);
 
         IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId);
         AdvertViewModel GetUserAdvertById(int userId, int advertId);
@@ -54,7 +56,7 @@ namespace FullStack.API.Services
             _appSettings = appSettings.Value;
         }
 
-        public UserAuthenticateResponseModel Authenticate(UserAuthenticateRequestModel model)
+        public UserAuthenticateResponseModel AuthenticateUser(UserAuthenticateRequestModel model)
         {
             // validation
             var results = _userValidator.Validate(model).ToArray();
@@ -77,13 +79,29 @@ namespace FullStack.API.Services
             return _userMapper.AuthenticateMapper(entity, token);
         }
 
-        public IEnumerable<UserViewModel> GetAll()
+        public void CheckUserPassword(int userId, UserPasswordCheckModel model)
+        {
+            // validation
+            var results = _userValidator.Validate(model.Password).ToArray();
+            if (results.Length > 0)
+                throw new ValidationApiException(results);
+
+            User entity = _repo.GetUser(userId);
+            if ( entity == null)
+                throw new NotFoundApiException("User does not exist");
+
+            if (entity.Password != model.Password)
+                throw new CheckPasswordApiException("Old password is incorrect");
+        }
+
+
+        public IEnumerable<UserViewModel> GetAllUsers()
         {
             var entityList = _repo.GetUsers();
             return entityList.Select(user => _userMapper.ViewMapper(user));
         }
 
-        public UserViewModel GetById(int id)
+        public UserViewModel GetUserById(int id)
         {
             var entity = _repo.GetUser(id);
             if (entity == null)
@@ -94,7 +112,7 @@ namespace FullStack.API.Services
             return _userMapper.ViewMapper(entity);
         }
 
-        public UserViewModel Create(UserRegisterModel model)
+        public UserViewModel CreateUser(UserCreateUpdateModel model)
         {
             // validation
             var results = _userValidator.Validate(model).ToArray();
@@ -108,6 +126,27 @@ namespace FullStack.API.Services
 
             User entity = _userMapper.EntityMapper(model);
             entity = _repo.CreateUser(entity);
+            return _userMapper.ViewMapper(entity);
+        }
+
+        public UserViewModel UpdateUser(int userId, UserCreateUpdateModel model)
+        {
+            User entity = _repo.GetUser(userId);
+
+            if (entity == null)
+                throw new NotFoundApiException("User does not exist");
+
+            if (model.Password == null)
+                model.Password = entity.Password;
+
+            // validation
+            var results = _userValidator.Validate(model).ToArray();
+            if (results.Length > 0)
+                throw new ValidationApiException(results);
+
+            entity = _userMapper.EntityMapper(model);
+            entity.Id = userId;
+            entity = _repo.UpdateUser(entity);
             return _userMapper.ViewMapper(entity);
         }
 
@@ -148,6 +187,7 @@ namespace FullStack.API.Services
 
         public void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model)
         {
+            var model1 = model;
             // validation
             var results = _advertValidator.Validate(model).ToArray();
             if (results.Length > 0)

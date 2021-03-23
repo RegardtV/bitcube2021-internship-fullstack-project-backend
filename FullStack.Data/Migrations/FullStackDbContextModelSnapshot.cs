@@ -26,8 +26,8 @@ namespace FullStack.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -41,8 +41,8 @@ namespace FullStack.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Province")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProvinceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
@@ -52,6 +52,10 @@ namespace FullStack.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("ProvinceId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Adverts");
@@ -60,36 +64,36 @@ namespace FullStack.Data.Migrations
                         new
                         {
                             Id = 1,
-                            City = "Paarl",
+                            CityId = 10,
                             Date = new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Cozy and luxurious apartment ideal for newlyweds",
                             Header = "2 Bedroom Luxury Apartment",
                             Price = 1320000m,
-                            Province = "Western Cape",
+                            ProvinceId = 5,
                             State = "Live",
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            City = "Bloemfontein",
+                            CityId = 3,
                             Date = new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Has a big living room and nice view of the city...",
                             Header = "Large family house that sleeps 6",
                             Price = 2000000m,
-                            Province = "Free State",
+                            ProvinceId = 2,
                             State = "Hidden",
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
-                            City = "Johannesburg",
+                            CityId = 6,
                             Date = new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "King Louis IV used to live here",
                             Header = "Mansion fit for a king",
                             Price = 11450000m,
-                            Province = "Gauteng",
+                            ProvinceId = 3,
                             State = "Hidden",
                             UserId = 1
                         });
@@ -236,6 +240,9 @@ namespace FullStack.Data.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -253,11 +260,27 @@ namespace FullStack.Data.Migrations
 
             modelBuilder.Entity("FullStack.Data.Entities.Advert", b =>
                 {
+                    b.HasOne("FullStack.Data.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FullStack.Data.Entities.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FullStack.Data.Entities.User", "User")
                         .WithMany("Adverts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("City");
+
+                    b.Navigation("Province");
 
                     b.Navigation("User");
                 });
