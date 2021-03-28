@@ -16,7 +16,10 @@ namespace FullStack.Data.Entities
         public decimal Price { get; set; }
         public DateTime Date { get; set; }
         public string State { get; set; }
+        public bool Featured { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
+        public ICollection<FavouriteJoin> FavouriteJoins { get; set; }
+            = new List<FavouriteJoin>();
     }
 }

@@ -10,7 +10,7 @@ namespace FullStack.Data.Repositories
 {
     public interface IAdvertRepository
     {
-        List<Advert> GetAllAdverts();
+        IEnumerable<Advert> GetAllAdverts();
         Advert GetAdvertById(int advertId);
         List<Province> GetAllProvinces();
         List<City> GetAllCities();
@@ -24,7 +24,7 @@ namespace FullStack.Data.Repositories
             _ctx = ctx;
         }
 
-        public List<Advert> GetAllAdverts()
+        public IEnumerable<Advert> GetAllAdverts()
         {
             return _ctx.Adverts.Include(ad => ad.Province).Include(ad => ad.City).ToList();
         }

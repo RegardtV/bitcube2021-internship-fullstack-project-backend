@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FullStack.Data.DbContexts
 {
-    public class FullStackDbContext: DbContext
+    public class FullStackDbContext : DbContext
     {
         public FullStackDbContext(DbContextOptions<FullStackDbContext> options)
             : base(options)
@@ -19,16 +19,39 @@ namespace FullStack.Data.DbContexts
         public DbSet<City> Cities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<FavouriteJoin>().HasKey(fav => new { fav.UserId, fav.AdvertId });
+
+            modelBuilder.Entity<FavouriteJoin>()
+                        .HasOne(f => f.User)
+                        .WithMany(c => c.FavouriteJoins)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FavouriteJoin>()
+                        .HasOne(f => f.Advert)
+                        .WithMany(c => c.FavouriteJoins)
+                        .OnDelete(DeleteBehavior.Restrict);
+
             // seed the database with dummy data
             modelBuilder.Entity<User>().HasData
             (
+                new User()
+                {
+                    Id = 2,
+                    FirstName = "John",
+                    LastName = "Smit",
+                    Email = "properproperties@gmail.com",
+                    Password = "ppAdmin1",
+                    AdminRole = true,
+                },
                 new User()
                 {
                     Id = 1,
                     FirstName = "Regardt",
                     LastName = "Visagie",
                     Email = "regardtvisagie@gmail.com",
-                    Password = "Reg14061465"
+                    Password = "Reg14061465",
+                    AdminRole = false,
                 }
             );
 
@@ -44,6 +67,7 @@ namespace FullStack.Data.DbContexts
                     Price = 1320000M,
                     Date = new DateTime(2020, 11, 05),
                     State = "Live",
+                    Featured = true,
                     UserId = 1
                 },
                 new Advert()
@@ -55,7 +79,8 @@ namespace FullStack.Data.DbContexts
                     CityId = 3,
                     Price = 2000000M,
                     Date = new DateTime(2021, 02, 25),
-                    State = "Hidden",
+                    State = "Live",
+                    Featured = false,
                     UserId = 1
                 },
                 new Advert()
@@ -68,6 +93,7 @@ namespace FullStack.Data.DbContexts
                     Price = 11450000M,
                     Date = new DateTime(2021, 03, 03),
                     State = "Hidden",
+                    Featured = false,
                     UserId = 1
                 }
             );

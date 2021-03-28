@@ -12,6 +12,9 @@ namespace FullStack.Data.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
+        public bool AdminRole { get; set; }
+        public ICollection<FavouriteJoin> FavouriteJoins { get; set; }
+            = new List<FavouriteJoin>();
         public ICollection<Advert> Adverts { get; set; }
             = new List<Advert>();
     }

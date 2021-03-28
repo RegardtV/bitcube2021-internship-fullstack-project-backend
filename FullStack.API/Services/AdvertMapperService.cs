@@ -32,6 +32,7 @@ namespace FullStack.API.Services
                 Price = entity.Price,
                 Date = entity.Date.ToString("dd-MM-yyyy"),
                 State = entity.State,
+                Featured = entity.Featured,
                 UserId = entity.UserId
             };
         }
@@ -46,7 +47,8 @@ namespace FullStack.API.Services
                 CityId = model.CityId,
                 Price = model.Price,
                 Date = DateTime.ParseExact(model.Date, "dd-MM-yyyy", CultureInfo.InvariantCulture),
-                State = model.State
+                State = model.State,
+                Featured = model.Featured
             };
         }
 

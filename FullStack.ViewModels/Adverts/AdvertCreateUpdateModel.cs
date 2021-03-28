@@ -13,5 +13,6 @@ namespace FullStack.ViewModels.Adverts
         public decimal Price { get; set; }
         public string Date { get; set; }
         public string State { get; set; }
+        public bool Featured { get; set; }
     }
 }

@@ -32,7 +32,6 @@ namespace FullStack.API.Controllers
             return Ok(adverts);
         }
 
-        [Authorize]
         [HttpGet("provinces")]
         public ActionResult<IEnumerable<ProvinceViewModel>> GetAllProvinces()
         {
@@ -40,7 +39,6 @@ namespace FullStack.API.Controllers
             return Ok(provinces);
         }
 
-        [Authorize]
         [HttpGet("cities")]
         public ActionResult<IEnumerable<CityViewModel>> GetAllCities()
         {
@@ -48,12 +46,39 @@ namespace FullStack.API.Controllers
             return Ok(cities);
         }
 
-        [Authorize]
         [HttpGet("provinces/{provinceId}/cities")]
         public ActionResult<IEnumerable<ProvinceViewModel>> GetAllProvinceCities(int provinceId)
         {
             var cities = _adService.GetAllProvinceCities(provinceId);
             return Ok(cities);
+        }
+
+        [HttpPost("featured/search")]
+        public ActionResult<IEnumerable<AdvertViewModel>> SearchFeaturedAdverts(AdvertSearchModel model)
+        {
+            var adverts = _adService.SearchFeaturedAdverts(model);
+            return Ok(adverts);
+        }
+
+        [HttpPost("notfeatured/search")]
+        public ActionResult<IEnumerable<AdvertViewModel>> SearchNonFeaturedAdverts(AdvertSearchModel model)
+        {
+            var adverts = _adService.SearchNonFeaturedAdverts(model);
+            return Ok(adverts);
+        }
+
+        [HttpGet("featured")]
+        public ActionResult<IEnumerable<AdvertViewModel>> GetAllFeaturedAdverts()
+        {
+            var adverts = _adService.GetAllFeaturedAdverts();
+            return Ok(adverts);
+        }
+
+        [HttpGet("notfeatured")]
+        public ActionResult<IEnumerable<AdvertViewModel>> GetAllNonFeaturedAdverts()
+        {
+            var adverts = _adService.GetAllNonFeaturedAdverts();
+            return Ok(adverts);
         }
     }
 }

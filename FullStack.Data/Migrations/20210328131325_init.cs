@@ -44,7 +44,8 @@ namespace FullStack.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdminRole = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,6 +65,7 @@ namespace FullStack.Data.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Featured = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -89,21 +91,45 @@ namespace FullStack.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FavouriteJoin",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    AdvertId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteJoin", x => new { x.UserId, x.AdvertId });
+                    table.ForeignKey(
+                        name: "FK_FavouriteJoin_Adverts_AdvertId",
+                        column: x => x.AdvertId,
+                        principalTable: "Adverts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FavouriteJoin_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "Id", "Name", "ProvinceId" },
                 values: new object[,]
                 {
                     { 1, "East London", 1 },
-                    { 2, "Port Elizabeth", 1 },
-                    { 3, "Bloemfontein", 2 },
-                    { 4, "Bethlehem", 2 },
-                    { 5, "Johannesburg", 3 },
-                    { 6, "Soweto", 3 },
-                    { 7, "Durban", 4 },
+                    { 10, "Paarl", 5 },
                     { 8, "Pietermaritzburg", 4 },
+                    { 7, "Durban", 4 },
+                    { 6, "Soweto", 3 },
                     { 9, "Cape Town", 5 },
-                    { 10, "Paarl", 5 }
+                    { 4, "Bethlehem", 2 },
+                    { 3, "Bloemfontein", 2 },
+                    { 2, "Port Elizabeth", 1 },
+                    { 5, "Johannesburg", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -120,23 +146,27 @@ namespace FullStack.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
-                values: new object[] { 1, "regardtvisagie@gmail.com", "Regardt", "Visagie", "Reg14061465", null });
+                columns: new[] { "Id", "AdminRole", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
+                values: new object[,]
+                {
+                    { 2, true, "properproperties@gmail.com", "John", "Smit", "ppAdmin1", null },
+                    { 1, false, "regardtvisagie@gmail.com", "Regardt", "Visagie", "Reg14061465", null }
+                });
 
             migrationBuilder.InsertData(
                 table: "Adverts",
-                columns: new[] { "Id", "CityId", "Date", "Description", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 1, 10, new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cozy and luxurious apartment ideal for newlyweds", "2 Bedroom Luxury Apartment", 1320000m, 5, "Live", 1 });
+                columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
+                values: new object[] { 1, 10, new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cozy and luxurious apartment ideal for newlyweds", true, "2 Bedroom Luxury Apartment", 1320000m, 5, "Live", 1 });
 
             migrationBuilder.InsertData(
                 table: "Adverts",
-                columns: new[] { "Id", "CityId", "Date", "Description", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 2, 3, new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city...", "Large family house that sleeps 6", 2000000m, 2, "Hidden", 1 });
+                columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
+                values: new object[] { 2, 3, new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city...", false, "Large family house that sleeps 6", 2000000m, 2, "Live", 1 });
 
             migrationBuilder.InsertData(
                 table: "Adverts",
-                columns: new[] { "Id", "CityId", "Date", "Description", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 3, 6, new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "King Louis IV used to live here", "Mansion fit for a king", 11450000m, 3, "Hidden", 1 });
+                columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
+                values: new object[] { 3, 6, new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "King Louis IV used to live here", false, "Mansion fit for a king", 11450000m, 3, "Hidden", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Adverts_CityId",
@@ -152,10 +182,18 @@ namespace FullStack.Data.Migrations
                 name: "IX_Adverts_UserId",
                 table: "Adverts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavouriteJoin_AdvertId",
+                table: "FavouriteJoin",
+                column: "AdvertId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FavouriteJoin");
+
             migrationBuilder.DropTable(
                 name: "Adverts");
 

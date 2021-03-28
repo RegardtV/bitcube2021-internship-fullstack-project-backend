@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStack.Data.Migrations
 {
     [DbContext(typeof(FullStackDbContext))]
-    [Migration("20210323152108_init")]
+    [Migration("20210328131325_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace FullStack.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Featured")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Header")
                         .HasColumnType("nvarchar(max)");
@@ -69,6 +72,7 @@ namespace FullStack.Data.Migrations
                             CityId = 10,
                             Date = new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Cozy and luxurious apartment ideal for newlyweds",
+                            Featured = true,
                             Header = "2 Bedroom Luxury Apartment",
                             Price = 1320000m,
                             ProvinceId = 5,
@@ -81,10 +85,11 @@ namespace FullStack.Data.Migrations
                             CityId = 3,
                             Date = new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Has a big living room and nice view of the city...",
+                            Featured = false,
                             Header = "Large family house that sleeps 6",
                             Price = 2000000m,
                             ProvinceId = 2,
-                            State = "Hidden",
+                            State = "Live",
                             UserId = 1
                         },
                         new
@@ -93,6 +98,7 @@ namespace FullStack.Data.Migrations
                             CityId = 6,
                             Date = new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "King Louis IV used to live here",
+                            Featured = false,
                             Header = "Mansion fit for a king",
                             Price = 11450000m,
                             ProvinceId = 3,
@@ -181,6 +187,21 @@ namespace FullStack.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FullStack.Data.Entities.FavouriteJoin", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "AdvertId");
+
+                    b.HasIndex("AdvertId");
+
+                    b.ToTable("FavouriteJoin");
+                });
+
             modelBuilder.Entity("FullStack.Data.Entities.Province", b =>
                 {
                     b.Property<int>("Id")
@@ -230,6 +251,9 @@ namespace FullStack.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("AdminRole")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -252,7 +276,17 @@ namespace FullStack.Data.Migrations
                     b.HasData(
                         new
                         {
+                            Id = 2,
+                            AdminRole = true,
+                            Email = "properproperties@gmail.com",
+                            FirstName = "John",
+                            LastName = "Smit",
+                            Password = "ppAdmin1"
+                        },
+                        new
+                        {
                             Id = 1,
+                            AdminRole = false,
                             Email = "regardtvisagie@gmail.com",
                             FirstName = "Regardt",
                             LastName = "Visagie",
@@ -287,9 +321,35 @@ namespace FullStack.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FullStack.Data.Entities.FavouriteJoin", b =>
+                {
+                    b.HasOne("FullStack.Data.Entities.Advert", "Advert")
+                        .WithMany("FavouriteJoins")
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FullStack.Data.Entities.User", "User")
+                        .WithMany("FavouriteJoins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FullStack.Data.Entities.Advert", b =>
+                {
+                    b.Navigation("FavouriteJoins");
+                });
+
             modelBuilder.Entity("FullStack.Data.Entities.User", b =>
                 {
                     b.Navigation("Adverts");
+
+                    b.Navigation("FavouriteJoins");
                 });
 #pragma warning restore 612, 618
         }

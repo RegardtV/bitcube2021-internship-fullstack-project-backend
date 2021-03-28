@@ -23,7 +23,8 @@ namespace FullStack.API.Services
                 LastName = model.LastName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                Password = model.Password
+                Password = model.Password,
+                AdminRole = model.AdminRole
             };
         }
 
@@ -35,7 +36,8 @@ namespace FullStack.API.Services
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Email = entity.Email,
-                PhoneNumber = entity.PhoneNumber
+                PhoneNumber = entity.PhoneNumber,
+                AdminRole = entity.AdminRole
             };
         }
 
@@ -48,6 +50,7 @@ namespace FullStack.API.Services
                 LastName = entity.LastName,
                 Email = entity.Email,
                 PhoneNumber = entity.PhoneNumber,
+                AdminRole = entity.AdminRole,
                 Token = token
             };
         }

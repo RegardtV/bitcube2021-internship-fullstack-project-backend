@@ -21,20 +21,25 @@ namespace FullStack.API.Services
     {
         UserAuthenticateResponseModel AuthenticateUser(UserAuthenticateRequestModel model);
         void CheckUserPassword(int userId, UserPasswordCheckModel model);
-        IEnumerable<UserViewModel> GetAllUsers();
+        List<UserViewModel> GetAllUsers();
         UserViewModel GetUserById(int id);
         UserViewModel CreateUser(UserCreateUpdateModel model);
         UserViewModel UpdateUser(int userId, UserCreateUpdateModel model);
 
-        IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId);
+        List<AdvertViewModel> GetAllUserAdverts(int userId);
+        List<AdvertViewModel> SearchUserAdverts(int userId, AdvertSearchModel model);
         AdvertViewModel GetUserAdvertById(int userId, int advertId);
         AdvertViewModel CreateUserAdvertById(int userId, AdvertCreateUpdateModel model);
         void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model);
+
+        List<AdvertViewModel> GetUserFavourites(int userId);
+        void AddRemoveUserFavourite(UserFavouriteModel model);
     }
 
     public class UserService : IUserService
     {
         private readonly IUserRepository _repo;
+        private readonly IAdvertRepository _advertRepo;
         private readonly IUserValidator _userValidator;
         public readonly IAdvertValidator _advertValidator;
         public readonly IUserMapper _userMapper;
@@ -42,6 +47,7 @@ namespace FullStack.API.Services
         private readonly AppSettings _appSettings;
 
         public UserService( IUserRepository repo,
+                            IAdvertRepository advertRepo,
                             IUserValidator userValidator,
                             IAdvertValidator advertValidator,
                             IUserMapper userMapper,
@@ -49,6 +55,7 @@ namespace FullStack.API.Services
                             IOptions<AppSettings> appSettings)
         {
             _repo = repo;
+            _advertRepo = advertRepo;
             _userValidator = userValidator;
             _advertValidator = advertValidator;
             _userMapper = userMapper;
@@ -95,10 +102,10 @@ namespace FullStack.API.Services
         }
 
 
-        public IEnumerable<UserViewModel> GetAllUsers()
+        public List<UserViewModel> GetAllUsers()
         {
             var entityList = _repo.GetUsers();
-            return entityList.Select(user => _userMapper.ViewMapper(user));
+            return entityList.Select(user => _userMapper.ViewMapper(user)).ToList();
         }
 
         public UserViewModel GetUserById(int id)
@@ -150,10 +157,21 @@ namespace FullStack.API.Services
             return _userMapper.ViewMapper(entity);
         }
 
-        public IEnumerable<AdvertViewModel> GetAllUserAdverts(int userId)
+        public List<AdvertViewModel> GetAllUserAdverts(int userId)
         {
             var entityList = _repo.GetAllUserAdverts(userId);
-            return entityList.Select(advert => _advertMapper.ViewMapper(advert));
+            entityList = entityList.Where(ad => ad.State != "Deleted").OrderByDescending(ad => ad.Date).ToList();
+            return entityList.Select(advert => _advertMapper.ViewMapper(advert)).ToList();
+        }
+
+        public List<AdvertViewModel> SearchUserAdverts(int userId, AdvertSearchModel model)
+        {
+            var entityList = _repo.GetAllUserAdverts(userId);
+            entityList = entityList.Where(ad => ad.State != "Deleted").ToList();
+
+            var returnList = FilterSearch(entityList, model);
+
+            return returnList.Select(advert => _advertMapper.ViewMapper(advert)).ToList();
         }
 
         public AdvertViewModel GetUserAdvertById(int userId, int advertId)
@@ -163,7 +181,7 @@ namespace FullStack.API.Services
 
             var entity = _repo.GetUserAdvertById(userId, advertId);
 
-            if (entity == null)
+            if (entity == null || entity.State == "Deleted")
                 throw new NotFoundApiException("Advert does not exist");
 
             return _advertMapper.ViewMapper(entity);
@@ -187,7 +205,6 @@ namespace FullStack.API.Services
 
         public void UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model)
         {
-            var model1 = model;
             // validation
             var results = _advertValidator.Validate(model).ToArray();
             if (results.Length > 0)
@@ -205,6 +222,42 @@ namespace FullStack.API.Services
             _repo.UpdateUserAdvertById(entity);
         }
 
+        public List<AdvertViewModel> GetUserFavourites(int userId)
+        {
+            var userEntity = _repo.GetUser(userId);
+
+            if (userEntity == null)
+                throw new NotFoundApiException("User does not exist");
+
+            var advertList = userEntity.FavouriteJoins.Select(join => join.Advert).ToList();
+            advertList.Where(ad => ad.State != "Deleted").ToList();
+            return advertList.Select(advert => _advertMapper.ViewMapper(advert)).ToList();
+        }
+
+        public void AddRemoveUserFavourite(UserFavouriteModel model)
+        {
+            var advertEntity = _advertRepo.GetAdvertById(model.AdvertId);
+            if (advertEntity == null || advertEntity.State == "Deleted")
+                throw new NotFoundApiException("Advert does not exist");
+
+            var userEntity = _repo.GetUser(model.UserId);
+
+            if (userEntity == null)
+                throw new NotFoundApiException("User does not exist");
+
+            var joinEntity = new FavouriteJoin();
+            joinEntity.UserId = model.UserId;
+            joinEntity.AdvertId = model.AdvertId;
+
+            if (userEntity.FavouriteJoins.FirstOrDefault(join => join.AdvertId == model.AdvertId) == null)
+            {
+                _repo.AddUserFavourite(joinEntity);
+            } 
+            else
+            {
+                _repo.RemoveUserFavourite(joinEntity);
+            }
+        }
 
         // generate token that is valid for 7 days
         private string GenerateJwtToken(int userId)
@@ -219,6 +272,60 @@ namespace FullStack.API.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private IEnumerable<Advert> FilterSearch(IEnumerable<Advert> adverts, AdvertSearchModel model)
+        {
+            IEnumerable<Advert> filteredList = new List<Advert>();
+
+            if (model.Keywords != null)
+            {
+                foreach (string keyword in model.Keywords)
+                {
+                    filteredList = filteredList.Concat(adverts.Where(ad => ad.Header.ToLower().Contains(keyword.ToLower()) ||
+                                                        ad.Description.ToLower().Contains(keyword.ToLower())));
+                }
+                // remove duplicates
+                filteredList = filteredList.Distinct();
+            }
+            else
+            {
+                filteredList = adverts;
+            }
+
+            if (model.ProvinceId != 0)
+                filteredList = filteredList.Where(ad => ad.ProvinceId == model.ProvinceId);
+
+
+            if (model.CityId != 0)
+                filteredList = filteredList.Where(ad => ad.CityId == model.CityId);
+
+            filteredList = filteredList.Where(ad => ad.Price >= model.MinPrice);
+
+            if (model.MaxPrice != 0)
+                filteredList = filteredList.Where(ad => ad.Price <= model.MaxPrice);
+
+            switch (model.OrderBy)
+            {
+                case 1:
+                    {
+                        filteredList = filteredList.OrderByDescending(ad => ad.Date);
+                        break;
+                    }
+                case 2:
+                    {
+                        filteredList = filteredList.OrderBy(ad => ad.Price);
+                        break;
+                    }
+                default:
+                    {
+                        filteredList = filteredList.OrderByDescending(ad => ad.Price);
+                        break;
+                    }
+
+            }
+
+            return filteredList;
         }
     }
 }

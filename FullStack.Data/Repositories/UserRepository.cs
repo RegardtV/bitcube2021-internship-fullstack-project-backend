@@ -19,6 +19,8 @@ namespace FullStack.Data.Repositories
         Advert GetUserAdvertById(int userId, int advertId);
         Advert CreateUserAdvertById(Advert advert);
         void UpdateUserAdvertById(Advert advert);
+        void AddUserFavourite(FavouriteJoin favourite);
+        void RemoveUserFavourite(FavouriteJoin favourite);
     }
     public class UserRepository: IUserRepository
     {
@@ -35,7 +37,14 @@ namespace FullStack.Data.Repositories
 
         public User GetUser(int id)
         {
-            return _ctx.Users.Find(id);
+            return _ctx.Users
+                .Include(user => user.FavouriteJoins)
+                    .ThenInclude(fav => fav.Advert)
+                        .ThenInclude(ad => ad.Province)
+                .Include(user => user.FavouriteJoins)
+                    .ThenInclude(fav => fav.Advert)
+                        .ThenInclude(ad => ad.City)
+                .FirstOrDefault(user => user.Id == id);
         }
 
         public User CreateUser(User user)
@@ -76,6 +85,18 @@ namespace FullStack.Data.Repositories
         public void UpdateUserAdvertById(Advert advert)
         {
             _ctx.Adverts.Update(advert);
+            _ctx.SaveChanges();
+        }
+
+        public void AddUserFavourite(FavouriteJoin favourite)
+        {
+            _ctx.Add(favourite);
+            _ctx.SaveChanges();
+        }
+
+        public void RemoveUserFavourite(FavouriteJoin favourite)
+        {
+            _ctx.Remove(favourite);
             _ctx.SaveChanges();
         }
     }

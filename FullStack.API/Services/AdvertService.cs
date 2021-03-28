@@ -24,6 +24,10 @@ namespace FullStack.API.Services
         IEnumerable<ProvinceViewModel> GetAllProvinces();
         IEnumerable<CityViewModel> GetAllCities();
         IEnumerable<CityViewModel> GetAllProvinceCities(int provinceId);
+        IEnumerable<AdvertViewModel> SearchFeaturedAdverts(AdvertSearchModel model);
+        IEnumerable<AdvertViewModel> SearchNonFeaturedAdverts(AdvertSearchModel model);
+        IEnumerable<AdvertViewModel> GetAllFeaturedAdverts();
+        IEnumerable<AdvertViewModel> GetAllNonFeaturedAdverts();
     }
 
     public class AdvertService : IAdvertService
@@ -42,14 +46,14 @@ namespace FullStack.API.Services
         public IEnumerable<AdvertViewModel> GetAllAdverts()
         {
             var entityList = _repo.GetAllAdverts();
-            return entityList.Select(advert => _mapper.ViewMapper(advert));
+            return entityList.Select(ad => _mapper.ViewMapper(ad)).Where(ad => ad.State != "Deleted");
         }
 
         public AdvertViewModel GetAdvertById(int advertId)
         {
             var entity = _repo.GetAdvertById(advertId);
             
-            if (entity == null)
+            if (entity == null || entity.State == "Deleted")
                 throw new NotFoundApiException("Advert does not exist");
 
             return _mapper.ViewMapper(entity);
@@ -71,6 +75,98 @@ namespace FullStack.API.Services
         {
             var entityList = _repo.GetAllProvinceCities(provinceId);
             return entityList.Select(city => _mapper.CityMapper(city));
+        }
+
+        public IEnumerable<AdvertViewModel> SearchFeaturedAdverts(AdvertSearchModel model)
+        {
+        
+            var entityList = _repo.GetAllAdverts();
+            entityList = entityList.Where(ad => ad.State == "Live" && ad.Featured == true);
+
+            var returnList = FilterSearch(entityList, model);
+
+            return returnList.Select(advert => _mapper.ViewMapper(advert));
+        }
+
+        public IEnumerable<AdvertViewModel> SearchNonFeaturedAdverts(AdvertSearchModel model)
+        {
+
+            var entityList = _repo.GetAllAdverts();
+            entityList = entityList.Where(ad => ad.State == "Live" && ad.Featured == false);
+
+            var returnList = FilterSearch(entityList, model);
+
+            return returnList.Select(advert => _mapper.ViewMapper(advert));
+        }
+
+        public IEnumerable<AdvertViewModel> GetAllFeaturedAdverts()
+        {
+            var entityList = _repo.GetAllAdverts();
+            entityList = entityList.Where(ad => ad.Featured == true);
+            entityList = entityList.OrderByDescending(ad => ad.Date);
+            return entityList.Select(advert => _mapper.ViewMapper(advert));
+        }
+
+        public IEnumerable<AdvertViewModel> GetAllNonFeaturedAdverts()
+        {
+            var entityList = _repo.GetAllAdverts();
+            entityList = entityList.Where(ad => ad.Featured == false);
+            entityList = entityList.OrderByDescending(ad => ad.Date);
+            return entityList.Select(advert => _mapper.ViewMapper(advert));
+        }
+
+        private IEnumerable<Advert> FilterSearch(IEnumerable<Advert> adverts, AdvertSearchModel model)
+        {
+            IEnumerable<Advert> filteredList = new List<Advert>();
+
+            if (model.Keywords != null)
+            {
+                foreach (string keyword in model.Keywords)
+                {
+                    filteredList = filteredList.Concat(adverts.Where(ad => ad.Header.ToLower().Contains(keyword.ToLower()) ||
+                                                        ad.Description.ToLower().Contains(keyword.ToLower())));
+                }
+                // remove duplicates
+                filteredList = filteredList.Distinct();
+            }
+            else
+            {
+                filteredList = adverts;
+            }
+
+            if (model.ProvinceId != 0)
+                filteredList = filteredList.Where(ad => ad.ProvinceId == model.ProvinceId);
+
+
+            if (model.CityId != 0)
+                filteredList = filteredList.Where(ad => ad.CityId == model.CityId);
+
+            filteredList = filteredList.Where(ad => ad.Price >= model.MinPrice);
+
+            if (model.MaxPrice != 0)
+                filteredList = filteredList.Where(ad => ad.Price <= model.MaxPrice);
+
+            switch (model.OrderBy)
+            {
+                case 1:
+                    {
+                        filteredList = filteredList.OrderByDescending(ad => ad.Date);
+                        break;
+                    }
+                case 2:
+                    {
+                        filteredList = filteredList.OrderBy(ad => ad.Price);
+                        break;
+                    }
+                default:
+                    {
+                        filteredList = filteredList.OrderByDescending(ad => ad.Price);
+                        break;
+                    }
+
+            }
+
+            return filteredList;
         }
     }
 }

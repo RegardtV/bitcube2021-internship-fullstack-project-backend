@@ -42,7 +42,7 @@ namespace FullStack.API.Controllers
         public IActionResult CheckUserPassword(int userId, UserPasswordCheckModel model)
         {
             _userService.CheckUserPassword(userId, model);
-            return Ok();
+            return NoContent();
         }
 
         [Authorize]
@@ -53,7 +53,6 @@ namespace FullStack.API.Controllers
             return Ok(users);
         }
 
-        [Authorize]
         [HttpGet("{id}", Name ="GetUserById")]
         public ActionResult<UserViewModel> GetUserById(int id)
         {
@@ -74,6 +73,13 @@ namespace FullStack.API.Controllers
         public ActionResult<IEnumerable<AdvertViewModel>> GetAllUserAdverts(int userId)
         {
             var adverts = _userService.GetAllUserAdverts(userId);
+            return Ok(adverts);
+        }
+
+        [HttpPost("{userId}/adverts/search")]
+        public ActionResult<IEnumerable<AdvertViewModel>> SearchUserAdverts(int userId, AdvertSearchModel model)
+        {
+            var adverts = _userService.SearchUserAdverts(userId, model);
             return Ok(adverts);
         }
 
@@ -98,6 +104,23 @@ namespace FullStack.API.Controllers
         public IActionResult UpdateUserAdvertById(int userId, int advertId, AdvertCreateUpdateModel model)
         {
             _userService.UpdateUserAdvertById(userId, advertId, model);
+            return NoContent();
+        }
+
+
+        [Authorize]
+        [HttpGet("favourites/{userId}")]
+        public ActionResult<AdvertViewModel> GetUserFavourites(int userId)
+        {
+            var adverts = _userService.GetUserFavourites(userId);
+            return Ok(adverts);
+        }
+
+        [Authorize]
+        [HttpPut("favourites")]
+        public IActionResult AddRemoveUserFavourite(UserFavouriteModel model)
+        {
+            _userService.AddRemoveUserFavourite(model);
             return NoContent();
         }
     }
