@@ -261,6 +261,9 @@ namespace FullStack.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Locked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
@@ -276,10 +279,21 @@ namespace FullStack.Data.Migrations
                         {
                             Id = 2,
                             AdminRole = true,
-                            Email = "properproperties@gmail.com",
+                            Email = "properproperties1@gmail.com",
                             FirstName = "John",
-                            LastName = "Smit",
+                            LastName = "Smith",
+                            Locked = false,
                             Password = "ppAdmin1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AdminRole = true,
+                            Email = "properproperties2@gmail.com",
+                            FirstName = "Johan",
+                            LastName = "Smit",
+                            Locked = false,
+                            Password = "ppAdmin2"
                         },
                         new
                         {
@@ -288,6 +302,7 @@ namespace FullStack.Data.Migrations
                             Email = "regardtvisagie@gmail.com",
                             FirstName = "Regardt",
                             LastName = "Visagie",
+                            Locked = false,
                             Password = "Reg14061465"
                         });
                 });

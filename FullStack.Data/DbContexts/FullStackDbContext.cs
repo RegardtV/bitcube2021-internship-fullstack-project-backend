@@ -39,9 +39,18 @@ namespace FullStack.Data.DbContexts
                 {
                     Id = 2,
                     FirstName = "John",
-                    LastName = "Smit",
-                    Email = "properproperties@gmail.com",
+                    LastName = "Smith",
+                    Email = "properproperties1@gmail.com",
                     Password = "ppAdmin1",
+                    AdminRole = true,
+                },
+                new User()
+                {
+                    Id = 3,
+                    FirstName = "Johan",
+                    LastName = "Smit",
+                    Email = "properproperties2@gmail.com",
+                    Password = "ppAdmin2",
                     AdminRole = true,
                 },
                 new User()

@@ -24,7 +24,8 @@ namespace FullStack.API.Services
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 Password = model.Password,
-                AdminRole = model.AdminRole
+                AdminRole = model.AdminRole,
+                Locked = model.Locked
             };
         }
 
@@ -37,7 +38,8 @@ namespace FullStack.API.Services
                 LastName = entity.LastName,
                 Email = entity.Email,
                 PhoneNumber = entity.PhoneNumber,
-                AdminRole = entity.AdminRole
+                AdminRole = entity.AdminRole,
+                Locked = entity.Locked
             };
         }
 
@@ -51,6 +53,7 @@ namespace FullStack.API.Services
                 Email = entity.Email,
                 PhoneNumber = entity.PhoneNumber,
                 AdminRole = entity.AdminRole,
+                Locked = entity.Locked,
                 Token = token
             };
         }

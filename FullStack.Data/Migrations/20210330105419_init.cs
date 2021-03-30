@@ -45,7 +45,8 @@ namespace FullStack.Data.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AdminRole = table.Column<bool>(type: "bit", nullable: false)
+                    AdminRole = table.Column<bool>(type: "bit", nullable: false),
+                    Locked = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,11 +147,12 @@ namespace FullStack.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AdminRole", "Email", "FirstName", "LastName", "Password", "PhoneNumber" },
+                columns: new[] { "Id", "AdminRole", "Email", "FirstName", "LastName", "Locked", "Password", "PhoneNumber" },
                 values: new object[,]
                 {
-                    { 2, true, "properproperties@gmail.com", "John", "Smit", "ppAdmin1", null },
-                    { 1, false, "regardtvisagie@gmail.com", "Regardt", "Visagie", "Reg14061465", null }
+                    { 3, true, "properproperties2@gmail.com", "Johan", "Smit", false, "ppAdmin2", null },
+                    { 2, true, "properproperties1@gmail.com", "John", "Smith", false, "ppAdmin1", null },
+                    { 1, false, "regardtvisagie@gmail.com", "Regardt", "Visagie", false, "Reg14061465", null }
                 });
 
             migrationBuilder.InsertData(

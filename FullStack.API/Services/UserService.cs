@@ -79,6 +79,11 @@ namespace FullStack.API.Services
                 throw new UnauthorizedApiException("Username or password is incorrect");
             }
 
+            if (entity.Locked)
+            {
+                throw new UnauthorizedApiException("Account is locked");
+            }
+
             // authentication successful so generate jwt token
             var token = GenerateJwtToken(entity.Id);
 
