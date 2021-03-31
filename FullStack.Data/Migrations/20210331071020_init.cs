@@ -122,15 +122,15 @@ namespace FullStack.Data.Migrations
                 values: new object[,]
                 {
                     { 1, "East London", 1 },
-                    { 10, "Paarl", 5 },
-                    { 8, "Pietermaritzburg", 4 },
-                    { 7, "Durban", 4 },
-                    { 6, "Soweto", 3 },
-                    { 9, "Cape Town", 5 },
-                    { 4, "Bethlehem", 2 },
-                    { 3, "Bloemfontein", 2 },
                     { 2, "Port Elizabeth", 1 },
-                    { 5, "Johannesburg", 3 }
+                    { 3, "Bloemfontein", 2 },
+                    { 4, "Bethlehem", 2 },
+                    { 5, "Johannesburg", 3 },
+                    { 6, "Soweto", 3 },
+                    { 7, "Durban", 4 },
+                    { 8, "Pietermaritzburg", 4 },
+                    { 9, "Cape Town", 5 },
+                    { 10, "Paarl", 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -138,11 +138,11 @@ namespace FullStack.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
+                    { 5, "Western Cape" },
+                    { 4, "KwaZulu-Natal" },
                     { 1, "Eastern Cape" },
                     { 2, "Free State" },
-                    { 3, "Gauteng" },
-                    { 4, "KwaZulu-Natal" },
-                    { 5, "Western Cape" }
+                    { 3, "Gauteng" }
                 });
 
             migrationBuilder.InsertData(
@@ -150,25 +150,30 @@ namespace FullStack.Data.Migrations
                 columns: new[] { "Id", "AdminRole", "Email", "FirstName", "LastName", "Locked", "Password", "PhoneNumber" },
                 values: new object[,]
                 {
-                    { 3, true, "properproperties2@gmail.com", "Johan", "Smit", false, "ppAdmin2", null },
+                    { 5, false, "pieterj@yhotmail.com", "Pieter", "Joubert", false, "Jouba1987", null },
                     { 2, true, "properproperties1@gmail.com", "John", "Smith", false, "ppAdmin1", null },
-                    { 1, false, "regardtvisagie@gmail.com", "Regardt", "Visagie", false, "Reg14061465", null }
+                    { 3, true, "properproperties2@gmail.com", "Johan", "Smit", false, "ppAdmin2", null },
+                    { 1, false, "regardtvisagie@gmail.com", "Regardt", "Visagie", false, "Reg14061465", null },
+                    { 4, false, "mk@yahoo.com", "Michelle", "Koorts", false, "Koorts123", null },
+                    { 6, false, "cs@ymail.com", "Chulu", "Sibuzo", false, "Chulu1982", null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Adverts",
                 columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 1, 10, new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cozy and luxurious apartment ideal for newlyweds", true, "2 Bedroom Luxury Apartment", 1320000m, 5, "Live", 1 });
-
-            migrationBuilder.InsertData(
-                table: "Adverts",
-                columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 2, 3, new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city...", false, "Large family house that sleeps 6", 2000000m, 2, "Live", 1 });
-
-            migrationBuilder.InsertData(
-                table: "Adverts",
-                columns: new[] { "Id", "CityId", "Date", "Description", "Featured", "Header", "Price", "ProvinceId", "State", "UserId" },
-                values: new object[] { 3, 6, new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "King Louis IV used to live here", false, "Mansion fit for a king", 11450000m, 3, "Hidden", 1 });
+                values: new object[,]
+                {
+                    { 1, 10, new DateTime(2020, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cozy and luxurious apartment ideal for newlyweds", true, "2 Bedroom Luxury Apartment", 1320000m, 5, "Live", 1 },
+                    { 2, 3, new DateTime(2021, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Has a big living room and nice view of the city...", false, "Large family house that sleeps 6", 2000000m, 2, "Live", 1 },
+                    { 3, 6, new DateTime(2021, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "King Louis IV used to live here", false, "Mansion fit for a king", 11450000m, 3, "Hidden", 1 },
+                    { 4, 9, new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Also includes a big garden for those who love gardening", true, "Double story, 5 bedroom house with granny flat", 4500000m, 5, "Live", 4 },
+                    { 5, 2, new DateTime(2021, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), "Situated in up-market area overlooking the city", false, "Bachelor plat ideal for students", 900000m, 1, "Live", 5 },
+                    { 6, 2, new DateTime(2020, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Recently repainted", true, "2 bedroom, 2 bathroom duplex", 1050000m, 1, "Live", 5 },
+                    { 7, 7, new DateTime(2020, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "Set in one of the most secure, private and exclusive estates in Uzili Upper. High Uzili is a sought-after Security Estate of 19 architecturally designed homes with the emphasis on security, style and peace and boasts natural Fynbos gardens and private walkways.", true, "4 Bedroom House for Sale in Uzuli", 5600000m, 4, "Live", 6 },
+                    { 8, 3, new DateTime(2020, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), "This Face Brick property consists of the following: 2 Bedrooms equipped with built-in cupboards and carpets, 2 Bathroom an Open-plan lounge, dining room, and a kitchen. A private garden in a very neat condition. Double Hollywood garage.", false, "2 Bedroom Town House for sale in Langenhovenpark", 860000m, 2, "Live", 6 },
+                    { 9, 3, new DateTime(2020, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Spacious 205 sq and such a neat unit and complex near doctors, church and shopping center. Lots of space inside and so many cupboards. Tandem garage! Call now!!!!", false, "3 Bedroom Townhouse for Sale in Pellissier", 1249000m, 2, "Hidden", 6 },
+                    { 10, 5, new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Attention all young couples looking for an amazing start-up home. This beautiful two-bedroom one bathroom unit is perfect for a small family looking to settle. Situated near all major amenities you cannot ask for more, from good schools to better shopping centers this location has it all.", false, "2 Bedroom Townhouse for Sale in Groenboom", 1000000m, 3, "Live", 6 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Adverts_CityId",

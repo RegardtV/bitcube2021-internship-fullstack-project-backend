@@ -102,6 +102,97 @@ namespace FullStack.Data.Migrations
                             ProvinceId = 3,
                             State = "Hidden",
                             UserId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CityId = 9,
+                            Date = new DateTime(2021, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Also includes a big garden for those who love gardening",
+                            Featured = true,
+                            Header = "Double story, 5 bedroom house with granny flat",
+                            Price = 4500000m,
+                            ProvinceId = 5,
+                            State = "Live",
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CityId = 2,
+                            Date = new DateTime(2021, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Situated in up-market area overlooking the city",
+                            Featured = false,
+                            Header = "Bachelor plat ideal for students",
+                            Price = 900000m,
+                            ProvinceId = 1,
+                            State = "Live",
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CityId = 2,
+                            Date = new DateTime(2020, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Recently repainted",
+                            Featured = true,
+                            Header = "2 bedroom, 2 bathroom duplex",
+                            Price = 1050000m,
+                            ProvinceId = 1,
+                            State = "Live",
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CityId = 7,
+                            Date = new DateTime(2020, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Set in one of the most secure, private and exclusive estates in Uzili Upper. High Uzili is a sought-after Security Estate of 19 architecturally designed homes with the emphasis on security, style and peace and boasts natural Fynbos gardens and private walkways.",
+                            Featured = true,
+                            Header = "4 Bedroom House for Sale in Uzuli",
+                            Price = 5600000m,
+                            ProvinceId = 4,
+                            State = "Live",
+                            UserId = 6
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CityId = 3,
+                            Date = new DateTime(2020, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "This Face Brick property consists of the following: 2 Bedrooms equipped with built-in cupboards and carpets, 2 Bathroom an Open-plan lounge, dining room, and a kitchen. A private garden in a very neat condition. Double Hollywood garage.",
+                            Featured = false,
+                            Header = "2 Bedroom Town House for sale in Langenhovenpark",
+                            Price = 860000m,
+                            ProvinceId = 2,
+                            State = "Live",
+                            UserId = 6
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CityId = 3,
+                            Date = new DateTime(2020, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Spacious 205 sq and such a neat unit and complex near doctors, church and shopping center. Lots of space inside and so many cupboards. Tandem garage! Call now!!!!",
+                            Featured = false,
+                            Header = "3 Bedroom Townhouse for Sale in Pellissier",
+                            Price = 1249000m,
+                            ProvinceId = 2,
+                            State = "Hidden",
+                            UserId = 6
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CityId = 5,
+                            Date = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Attention all young couples looking for an amazing start-up home. This beautiful two-bedroom one bathroom unit is perfect for a small family looking to settle. Situated near all major amenities you cannot ask for more, from good schools to better shopping centers this location has it all.",
+                            Featured = false,
+                            Header = "2 Bedroom Townhouse for Sale in Groenboom",
+                            Price = 1000000m,
+                            ProvinceId = 3,
+                            State = "Live",
+                            UserId = 6
                         });
                 });
 
@@ -304,6 +395,36 @@ namespace FullStack.Data.Migrations
                             LastName = "Visagie",
                             Locked = false,
                             Password = "Reg14061465"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AdminRole = false,
+                            Email = "mk@yahoo.com",
+                            FirstName = "Michelle",
+                            LastName = "Koorts",
+                            Locked = false,
+                            Password = "Koorts123"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AdminRole = false,
+                            Email = "pieterj@yhotmail.com",
+                            FirstName = "Pieter",
+                            LastName = "Joubert",
+                            Locked = false,
+                            Password = "Jouba1987"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AdminRole = false,
+                            Email = "cs@ymail.com",
+                            FirstName = "Chulu",
+                            LastName = "Sibuzo",
+                            Locked = false,
+                            Password = "Chulu1982"
                         });
                 });
 
