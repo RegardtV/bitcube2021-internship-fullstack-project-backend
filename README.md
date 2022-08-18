@@ -1,1 +1,1 @@
-Bitcube2021 internship fullstack project backend
+Bitcube2021 internship fullstack project backend ([project specification here](https://drive.google.com/file/d/1McGpGDVHkKUT3t1BWC--98BnmpzkW8Lz/view))
